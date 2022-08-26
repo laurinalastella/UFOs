@@ -98,7 +98,7 @@ function buildTable(data) {
   // with an arrow function, once again making 
   // the code more concise and easy to read.
   data.forEach((dataRow) => {
-    
+
     // tells JavaScript to find the <tbody> tag 
     // within the HTML and add a table row ("tr").
     let row = tbody.append("tr");
@@ -126,7 +126,83 @@ function buildTable(data) {
   });
 }
 
+// 11.5.3, 11.5.4
+// Data-Driven Documents (D3 for short) is a 
+// JavaScript library that adds interactive 
+// functionality, such as when users click a 
+// button to filter a table. It works by 
+// "listening" for events, such as a button click, 
+// then reacts according to the code we've created.
 
 
+
+
+function handleClick() {
+
+  // The .select() function is a very common one 
+  // used in D3. It will select the very first 
+  // element that matches our selector string: 
+  // "#datetime". The selector string is the 
+  // item we're telling D3.js to look for.
+  // With d3.select("#datetime"), for example, 
+  // we're telling D3 to look for the #datetime id 
+  // in the HTML tags. We haven't created our HTML 
+  // yet, but we know that the date value will be 
+  // nested within tags that have an id of "datetime."
+  // By chaining .property("value"); to the d3.select 
+  // function, we're telling D3 not only to look for 
+  // where our date values are stored on the webpage, 
+  // but to actually grab that information and hold it 
+  // in the "date" variable.
+  let date = d3.select("#datetime").property("value");
+
+  // Now we need to set a default filter and save it 
+  // to a new variable. Our default filter will actually 
+  // be the original table data because we want users 
+  // to refine their search on their own terms. Let's 
+  // add the new variable on the next line.
+  // Here's a variable we haven't seen in a while: 
+  // tableData. This is the original data as imported 
+  // from our data.js file. By setting the filteredData 
+  // variable to our raw data, we're basically using it 
+  // as a blank slate. The function we're working on 
+  // right now will be run each time the filter button 
+  // is clicked on the website. If no date has been 
+  // entered as a filter, then all of the data will be 
+  // returned instead.
+  let filteredData = tableData;
+
+  // syntax for the .filter() method: 
+  // row => row.datetime === date);. 
+  // This line is what applies the filter 
+  // to the table data. It's basically saying, 
+  // "Show only the rows where the date is equal 
+  // to the date filter we created above." 
+  // The triple equal signs test for equality, 
+  // meaning that the date in the table has to 
+  // match our filter exactly.
+  // There are two ways to test for equality 
+  // in JavaScript: == and ===. 
+  // While they look similar, there are differences. 
+  // A triple equal sign (===) is checking for 
+  // strict equality. This means that the 
+  // type and value have to match perfectly.
+  // A double equals sign (==) is checking for 
+  // loose equality. This means that the 
+  // type and value are loosely matched. 
+  if (date) {
+    filteredData = filteredData.filter(row => row.datetime === date);
+  };
+
+  // We are passing in our filteredData variable as our 
+  // argument so that only the data that matches the 
+  // filter is displayed.
+  buildTable(filteredData);
+}
+
+d3.selectAll("#filter-btn").on("click", handleClick);
+
+// Build the table when the page loads
+buildTable(tableData);
 
 
